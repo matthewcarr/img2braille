@@ -1,8 +1,15 @@
-% Args   img_name = filename of b&w image with 1-bit depth (for now)
-% Usage  img_name = 'test.tif';
+% Args   img_name = filename of image
+% Usage  img_name = 'test.png';
 %        braille = img2braille(img_name);
 function braille = img2braille(img_name)
     img = imread(img_name);
+    if (size(img, 3) == 3)  % if RGB image
+        img = rgb2gray(img);  % convert to greyscale intensity map
+    end
+    if (isnumeric(img))  % if greyscale image
+        img = dither(img);  % dither greyscale to b&w
+    end
+
     [y_max, x_max] = size(img);
     x = 1;  % columns
     x_max = x_max - 2;  % some edge pixels lost when size isn't divisible without remainder
@@ -534,5 +541,5 @@ function braille = img2braille(img_name)
         x = 1;
         y = y + 4;
     end
-    dlmwrite(strcat(img_name, '.html'), braille, ';')
+    dlmwrite(strcat(img_name, '.html.raw'), braille, ';')
 end
