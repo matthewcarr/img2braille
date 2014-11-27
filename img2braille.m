@@ -13,6 +13,8 @@ function braille = img2braille(img_name)
         img = dither(img);  % dither to give 1-bit image
     end
 
+    img = ~img;  % 'Invert' image since my list treats dark and light in the reverse way
+
     % all 256 characters sorted by predetermined 'binary value'
     character_map = [
         '&#10240;';'&#10368;';'&#10304;';'&#10432;';'&#10272;';'&#10400;';'&#10336;';'&#10464;';
