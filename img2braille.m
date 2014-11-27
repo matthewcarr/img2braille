@@ -1,13 +1,13 @@
-% Args   img_name = filename of image
-% Usage  img_name = 'test.png';
-%        braille = img2braille(img_name);
+% Usage : braille = img2braille('test.png');
+% Args  : img_name = filename of image
+% Rets  : braille = array of html character entities
 
 function braille = img2braille(img_name)
 	img = imread(img_name);
 	if (size(img, 3) == 3)  % if RGB image
 		img = rgb2gray(img);  % convert to greyscale intensity map
 	end
-	if (isnumeric(img)) % if greyscale image
+	if (isnumeric(img))  % if greyscale image
 		img = dither(img);  % dither to give 1-bit image
 	end
 
@@ -46,20 +46,20 @@ function braille = img2braille(img_name)
 		'&#10255;';'&#10383;';'&#10319;';'&#10447;';'&#10287;';'&#10415;';'&#10351;';'&#10479;';
 		'&#10271;';'&#10399;';'&#10335;';'&#10463;';'&#10303;';'&#10431;';'&#10367;';'&#10495;'
 	];
-	character_map = cellstr(character_map);
+	character_map = cellstr(character_map);  % make it into an actual array of strings #matlabproblems
 
 	[y_max, x_max] = size(img);
 	x = 1;  % columns
-	x_max = x_max - 2;  % some edge pixels lost when size isn't divisible without remainder
+	x_max = x_max - 2;  % some edge pixels are lost when size isn't divisible into braille chars w/out remainder
 	y = 1;  % rows
 	y_max = y_max - 4;
-	braille = cell(floor(y_max ./ 4), floor(x_max ./ 2));
+	braille = cell(floor(y_max ./ 4), floor(x_max ./ 2));  % preallocate output cell
 
 	while (y < y_max)
 		while (x < x_max)
 			% multiply each 'bit' of image pattern by correct power of 2 to give same format as predefined character patterns
 			temp = img(y, x) .* 128 + img(y, x + 1) .* 64 + img(y, x + 2) .* 32 + img(y, x + 3) .* 16 + img(y + 1, x) .* 8 + img(y + 1, x + 1) .* 4 + img(y + 1, x + 2) .* 2 + img(y + 1, x + 3); 
-			braille((y - 1) ./ 4 + 1, (x - 1) ./ 2 + 1) = character_map(temp + 1);
+			braille((y - 1) ./ 4 + 1, (x - 1) ./ 2 + 1) = character_map(temp + 1);  % 1-indexed arrays... always get me
 			x = x + 2;
 		end
 
@@ -67,5 +67,6 @@ function braille = img2braille(img_name)
 		y = y + 4;
 	end
 
+	% todo: fix output file format to give valid html
 	dlmwrite(strcat(img_name, '.html.raw'), braille, ' ');
 end
