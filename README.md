@@ -1,12 +1,15 @@
-﻿img2braille.m
-=============
+img2braille
+===========
 
-Because redrawing black and white images using Unicode Braille characters is... useful?
+Because redrawing images in black and white using Unicode Braille characters is... useful?
 
 It's in Matlab code right now, it doesn't really need to be, so I should change it to something that's less Matlab.
 
 What is...
 ----------
+###img2braille.m
+Matlab code, takes the name of an image file as an input and returns an array of HTML character entities that 'draw' that image. This array is also written to `img_name.html` with added tags to generate a viewable HTML document.
+
 ###character table.txt
 Giant list of all 256 Unicode Braille characters, their names, and corresponding 8-bit binary represnetaion of their pattern.
 The number of each dot in the Braille characters is as follows.
@@ -21,6 +24,7 @@ The binary and hex representations treat 1 as the MSB and 8 as LSB. For example,
 
 ###test.png
 ![So good.](./test.png "Such a beautiful image.")
+
 A wonderful hand (MS Paint) crafted test image.
 
 ###test.png.html
