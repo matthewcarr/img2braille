@@ -19,8 +19,8 @@ The number of each dot in the Braille characters is as follows.
 The binary and hex representations treat 1 as the MSB and 8 as LSB. For example, `⢭` would be represented by `0b10110101` or `0xB5`. 
 
 ###test.png
-A wonderfully crafted test image.
 ![So good.](https://github.com/matthewcarr/img2braille/blob/master/test.png "Such a beautiful image")
+A wonderfully crafted test image.
 
 ###test.png.html.raw
 Sample raw output from the test image.
