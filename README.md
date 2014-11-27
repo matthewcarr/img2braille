@@ -20,8 +20,8 @@ The binary and hex representations treat 1 as the MSB and 8 as LSB. For example,
 [This list](http://symbolcodes.tlt.psu.edu/bylanguage/braillechart.html) was very useful in making this part easy for me.
 
 ###test.png
-![So good.](../blob/master/test.png "Such a beautiful image.")
+![So good.](./test.png "Such a beautiful image.")
 A wonderful hand (MS Paint) crafted test image.
 
 ###test.png.html
-[Sample output](./blob/master/test.png.html "Still a beautiful image.") from test image.
+[Sample output](./test.png.html "Still a beautiful image.") from test image.
