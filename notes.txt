@@ -1,7 +1,4 @@
 ﻿## html
-#  replace ';' with ';&#'
-#  replace '\n' with ';\n&#'
-#  (watch for first and last character of block)
 #  add head and foot to html document
 
 # html head
