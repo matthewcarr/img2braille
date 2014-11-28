@@ -14,11 +14,15 @@ function braille = img2braille(img_name, crop)
         img = rgb2gray(img);  % convert to greyscale intensity map
     end
 
-    if (isnumeric(img))  % if greyscale image
+    if (size(unique(img)) == [2 1])  % if image has only 2 colour values no need to dither
+        temp = unique(img);  % set lower value to 0 (black)
+        img(img == temp(1)) = 0;
+        img = logical(img);  % and convert to logical type (higher value becomes 1)
+    elseif (isnumeric(img))  % if greyscale image
         img = dither(img);  % dither to give 1-bit image
     end
 
-    img = ~img;  % 'Invert' image since my list treats dark and light in the reverse way
+    img = ~img;  % 'Invert' image since my list treats dark and light in the reverse way to matlab
 
     character_map = [  % all 256 characters sorted by predetermined 'binary value'
         '&#10240;';'&#10368;';'&#10304;';'&#10432;';'&#10272;';'&#10400;';'&#10336;';'&#10464;';
