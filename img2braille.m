@@ -1,8 +1,13 @@
-% Usage : braille = img2braille('test.png');
-% Args  : img_name = filename of image
-% Rets  : braille = array of html character entities
+% Args  : img_name = string, filename of image
+%         crop     = boolean, if image doens't fit into (n*2)*(m*4) exactly, select
+%                      whether to crop edges or add blank pixels (optional, defaults to true)
+% Rets  : braille  = array of html character entities
 
-function braille = img2braille(img_name)
+function braille = img2braille(img_name, crop)
+    if (~exist('crop'))
+        crop = 1;
+    end
+
     img = imread(img_name);
 
     if (size(img, 3) == 3)  % if RGB image
@@ -15,8 +20,7 @@ function braille = img2braille(img_name)
 
     img = ~img;  % 'Invert' image since my list treats dark and light in the reverse way
 
-    % all 256 characters sorted by predetermined 'binary value'
-    character_map = [
+    character_map = [  % all 256 characters sorted by predetermined 'binary value'
         '&#10240;';'&#10368;';'&#10304;';'&#10432;';'&#10272;';'&#10400;';'&#10336;';'&#10464;';
         '&#10256;';'&#10384;';'&#10320;';'&#10448;';'&#10288;';'&#10416;';'&#10352;';'&#10480;';
         '&#10248;';'&#10376;';'&#10312;';'&#10440;';'&#10280;';'&#10408;';'&#10344;';'&#10472;';
@@ -50,24 +54,39 @@ function braille = img2braille(img_name)
         '&#10255;';'&#10383;';'&#10319;';'&#10447;';'&#10287;';'&#10415;';'&#10351;';'&#10479;';
         '&#10271;';'&#10399;';'&#10335;';'&#10463;';'&#10303;';'&#10431;';'&#10367;';'&#10495;'
     ];
-    character_map = cellstr(character_map);  % make it into an actual array of strings #matlabproblems
+    character_map = cellstr(character_map);  % make it into an actual array of strings
 
     [y_max, x_max] = size(img);
-    x = 1;  % columns
-    x_max = x_max - 2;  % some edge pixels are lost when size isn't divisible into braille chars w/out remainder
+
+    if (~crop)  % add blank pixels
+        if (mod(y_max, 4))
+            temp = logical(zeros(4 - mod(y_max, 4), x_max));
+            img = vertcat (img, temp);  % join arrays
+            y_max = y_max + 4 - mod(y_max, 4);  % update y_max
+        end
+        if (mod(x_max, 2))
+            temp = logical(zeros(y_max, 1));
+            img = horzcat (img, temp);
+            x_max = x_max + 1;
+        end
+    end
+
+    x_max = floor(x_max ./ 2) .* 2;  % some edge pixels are lost when size isn't divisible into braille chars w/out remainder
+    y_max = floor(y_max ./ 4) .* 4;  % no effect if image size already fits into characters exactly
+    braille = cell(y_max ./ 4, x_max ./ 2);  % preallocate output cell
+
     y = 1;  % rows
-    y_max = y_max - 4;
-    braille = cell(floor(y_max ./ 4), floor(x_max ./ 2));  % preallocate output cell
 
     while (y < y_max)
+        x = 1;  % columns
+
         while (x < x_max)
             % multiply each 'bit' of image pattern by correct power of 2 to give same format as predefined character patterns
-            temp = img(y, x) .* 128 + img(y, x + 1) .* 64 + img(y, x + 2) .* 32 + img(y, x + 3) .* 16 + img(y + 1, x) .* 8 + img(y + 1, x + 1) .* 4 + img(y + 1, x + 2) .* 2 + img(y + 1, x + 3); 
+            temp = img(y, x) .* 128 + img(y + 1, x) .* 64 + img(y + 2, x) .* 32 + img(y + 3, x) .* 16 + img(y, x + 1) .* 8 + img(y + 1, x + 1) .* 4 + img(y + 2, x + 1) .* 2 + img(y + 3, x + 1); 
             braille((y - 1) ./ 4 + 1, (x - 1) ./ 2 + 1) = character_map(temp + 1);  % 1-indexed arrays... always get me
             x = x + 2;
         end
 
-        x = 1;
         y = y + 4;
     end
 
