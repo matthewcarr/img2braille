@@ -86,7 +86,7 @@ function braille = img2braille(img_name, crop)
 
         while (x < x_max)
             % multiply each 'bit' of image pattern by correct power of 2 to give same format as predefined character patterns
-            temp = img(y, x) .* 128 + img(y + 1, x) .* 64 + img(y + 2, x) .* 32 + img(y + 3, x) .* 16 + img(y, x + 1) .* 8 + img(y + 1, x + 1) .* 4 + img(y + 2, x + 1) .* 2 + img(y + 3, x + 1); 
+            temp = img(y, x) .* 128 + img(y + 1, x) .* 64 + img(y + 2, x) .* 32 + img(y, x + 1) .* 16 + img(y + 1, x + 1) .* 8 + img(y + 2, x + 1) .* 4 + img(y + 3, x) .* 2 + img(y + 3, x + 1); 
             braille((y - 1) ./ 4 + 1, (x - 1) ./ 2 + 1) = character_map(temp + 1);  % 1-indexed arrays... always get me
             x = x + 2;
         end
